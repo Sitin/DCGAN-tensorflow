@@ -18,10 +18,12 @@ flags.DEFINE_integer("input_width", None, "The size of image to use (will be cen
 flags.DEFINE_integer("output_height", 64, "The size of the output images to produce [64]")
 flags.DEFINE_integer("output_width", None, "The size of the output images to produce. If None, same value as output_height [None]")
 flags.DEFINE_integer("c_dim", 3, "Dimension of image color. [3]")
-flags.DEFINE_string("dataset", "celebA", "The name of dataset [celebA, mnist, lsun]")
+flags.DEFINE_string("dataset", "celebA", "The name of dataset [celebA, mnist, lsun, 17flowers]")
 flags.DEFINE_string("input_fname_pattern", "*.jpg", "Glob pattern of filename of input images [*]")
 flags.DEFINE_string("checkpoint_dir", "checkpoint", "Directory name to save the checkpoints [checkpoint]")
+flags.DEFINE_integer("checkpoint_rate", 500, "How often to save model checkpoints [500]")
 flags.DEFINE_string("sample_dir", "samples", "Directory name to save the image samples [samples]")
+flags.DEFINE_integer("samples_rate", 100, "How often to produce samples [100]")
 flags.DEFINE_boolean("is_train", False, "True for training, False for testing [False]")
 flags.DEFINE_boolean("is_crop", False, "True for training, False for testing [False]")
 flags.DEFINE_boolean("visualize", False, "True for visualizing, False for nothing [False]")
@@ -59,7 +61,9 @@ def main(_):
           input_fname_pattern=FLAGS.input_fname_pattern,
           is_crop=FLAGS.is_crop,
           checkpoint_dir=FLAGS.checkpoint_dir,
-          sample_dir=FLAGS.sample_dir)
+          checkpoint_rate=FLAGS.checkpoint_rate,
+          sample_dir=FLAGS.sample_dir,
+          samples_rate=FLAGS.samples_rate)
     else:
       dcgan = DCGAN(
           sess,
@@ -73,7 +77,9 @@ def main(_):
           input_fname_pattern=FLAGS.input_fname_pattern,
           is_crop=FLAGS.is_crop,
           checkpoint_dir=FLAGS.checkpoint_dir,
-          sample_dir=FLAGS.sample_dir)
+          checkpoint_rate=FLAGS.checkpoint_rate,
+          sample_dir=FLAGS.sample_dir,
+          samples_rate=FLAGS.samples_rate)
 
     if FLAGS.is_train:
       dcgan.train(FLAGS)

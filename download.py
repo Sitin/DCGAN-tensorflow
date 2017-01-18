@@ -16,10 +16,12 @@ import shutil
 import zipfile
 import argparse
 import subprocess
+import glob
+from PIL import Image
 from six.moves import urllib
 
 parser = argparse.ArgumentParser(description='Download dataset for DCGAN.')
-parser.add_argument('datasets', metavar='N', type=str, nargs='+', choices=['celebA', 'lsun', 'mnist'],
+parser.add_argument('datasets', metavar='N', type=str, nargs='+', choices=['celebA', 'lsun', 'mnist', '17flowers'],
            help='name of dataset to download [celebA, lsun, mnist]')
 
 def download(url, dirpath):
@@ -128,6 +130,61 @@ def download_mnist(dirpath):
     print('Decompressing ', file_name)
     subprocess.call(cmd)
 
+def download_17flowers(dirpath):
+  data_dir = os.path.join(dirpath, '17flowers')
+
+  if os.path.exists(data_dir):
+    print('Found Oxford Flowers - skip')
+    return
+  else:
+    os.mkdir(data_dir)
+  url_base = 'http://www.robots.ox.ac.uk/~vgg/data/flowers/17/'
+  file_names = ['17flowers.tgz']
+  for file_name in file_names:
+    url = (url_base+file_name).format(**locals())
+    print(url)
+    out_path = os.path.join(data_dir,file_name)
+
+    cmd = ['curl', url, '-o', out_path]
+    print('Downloading ', file_name)
+    subprocess.call(cmd)
+
+    cmd = ['tar', '-zxvf', out_path, '-C', data_dir]
+    print('Decompressing ', file_name)
+    subprocess.call(cmd)
+
+    print('Resizing')
+    new_width = 128
+    new_height = 128
+    for path in glob.glob(data_dir + '/jpg/*.jpg'):
+      img = Image.open(path)
+      width, height = img.size   # Get dimensions
+
+      if height > width:
+        img = img.resize((new_width, int(new_height * height / width)),
+                         Image.ANTIALIAS)
+      else:
+        img = img.resize((int(new_width * width / height), new_height),
+                         Image.ANTIALIAS)
+
+      width, height = img.size   # Get dimensions
+
+      left = (width - new_width)/2
+      top = (height - new_height)/2
+      right = (width + new_width)/2
+      bottom = (height + new_height)/2
+
+      cropped = img.crop((left, top, right, bottom))
+
+      name = os.path.splitext(os.path.basename(path))[0]
+      cropped.save(data_dir + '/' + name + '.png')
+
+      print(name)
+
+    cmd = ['rm', '-rf', data_dir + '/jpg', data_dir + '/' + file_name]
+    print('Cleaning up ', file_name)
+    subprocess.call(cmd)
+
 def prepare_data_dir(path = './data'):
   if not os.path.exists(path):
     os.mkdir(path)
@@ -142,3 +199,5 @@ if __name__ == '__main__':
     download_lsun('./data')
   if 'mnist' in args.datasets:
     download_mnist('./data')
+  if '17flowers' in args.datasets:
+    download_17flowers('./data')

@@ -31,16 +31,22 @@ First, download dataset with:
 
     $ python download.py mnist
     $ python download.py celebA
+    $ python download.py 17flowers
 
 To train a model with downloaded dataset:
 
     $ python main.py --dataset mnist --input_height=28 --output_height=28 --c_dim=1 --is_train
     $ python main.py --dataset celebA --input_height=108 --is_train --is_crop True
+    $ python main.py --dataset 17flowers --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train
+    
+    
+Note that you can increase increase checkpoints and samples rate by `--samples_rate=10 --checkpoint_rate=100`.
 
 To test with an existing model:
 
     $ python main.py --dataset mnist --input_height=28 --output_height=28 --c_dim=1
     $ python main.py --dataset celebA --input_height=108 --is_crop True
+    $ python main.py --dataset 17flowers --input_height=128 --is_crop True --input_fname_pattern "*.png"
 
 Or, you can use your own dataset (without central crop) by:
 
