@@ -5,6 +5,8 @@ Downloads the following:
 - Celeb-A dataset
 - LSUN dataset
 - MNIST dataset
+- Oxford Flowers (17) dataset
+- Oxford Flowers (17) simplified dataset
 """
 
 from __future__ import print_function
@@ -21,8 +23,9 @@ from PIL import Image
 from six.moves import urllib
 
 parser = argparse.ArgumentParser(description='Download dataset for DCGAN.')
-parser.add_argument('datasets', metavar='N', type=str, nargs='+', choices=['celebA', 'lsun', 'mnist', '17flowers'],
-           help='name of dataset to download [celebA, lsun, mnist]')
+parser.add_argument('datasets', metavar='N', type=str, nargs='+',
+                    choices=['celebA', 'lsun', 'mnist', '17flowers', '17flowers_simplified'],
+                    help='name of dataset to download [celebA, lsun, mnist]')
 
 def download(url, dirpath):
   filename = url.split('/')[-1]
@@ -185,6 +188,33 @@ def download_17flowers(dirpath):
     print('Cleaning up ', file_name)
     subprocess.call(cmd)
 
+def download_17flowers_simplified(dirpath):
+  data_dir = os.path.join(dirpath, '17flowers_simplified')
+
+  if os.path.exists(data_dir):
+    print('Found Oxford Flowers simplified - skip')
+    return
+  else:
+    os.mkdir(data_dir)
+  url_base = 'https://dl.dropboxusercontent.com/s/00lml7uxgamm6n9/'
+  file_names = ['17flowers_simplified.zip']
+  for file_name in file_names:
+    url = (url_base+file_name).format(**locals())
+    print(url)
+    out_path = os.path.join(data_dir,file_name)
+
+    cmd = ['curl', url, '-o', out_path]
+    print('Downloading ', file_name)
+    subprocess.call(cmd)
+
+    cmd = ['unzip', out_path, '-d', data_dir]
+    print('Decompressing ', file_name)
+    subprocess.call(cmd)
+
+    cmd = ['rm', data_dir + '/' + file_name]
+    print('Cleaning up ', file_name)
+    subprocess.call(cmd)
+
 def prepare_data_dir(path = './data'):
   if not os.path.exists(path):
     os.mkdir(path)
@@ -201,3 +231,5 @@ if __name__ == '__main__':
     download_mnist('./data')
   if '17flowers' in args.datasets:
     download_17flowers('./data')
+  if '17flowers_simplified' in args.datasets:
+    download_17flowers_simplified('./data')
