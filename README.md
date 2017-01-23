@@ -24,6 +24,10 @@ Tensorflow implementation of [Deep Convolutional Generative Adversarial Networks
 - (Optional) [moviepy](https://github.com/Zulko/moviepy) (for visualization)
 - (Optional) [Align&Cropped Images.zip](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html) : Large-scale CelebFaces Dataset
 
+```sh
+pip install -r requirements.txt
+```
+
 
 ## Usage
 
