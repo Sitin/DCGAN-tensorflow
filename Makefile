@@ -1,7 +1,7 @@
 .PHONY: all
 
 train-flowers17-simplified:
-	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train --samples_rate=10 --checkpoint_rate=100 --epoch 2500
+	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train --samples_rate=100 --checkpoint_rate=100 --epoch 2500
 
 test-flowers17-simplified:
 	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png"
