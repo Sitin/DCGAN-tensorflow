@@ -1,7 +1,7 @@
 .PHONY: all
 
 train-flowers17-simplified:
-	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train --samples_rate=100 --checkpoint_rate=100 --epoch 2500
+	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train --samples_rate=100 --checkpoint_rate=100 --epoch 1000
 
 test-flowers17-simplified:
 	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png"
@@ -44,7 +44,22 @@ clean-arrange:
 	@echo "Clean arrange animation" && \
 	rm -f animated_arrange.*
 
-publish: mp4
+pack-models:
+	@echo "Compress models" && \
+	zip DCGAN-models.zip -r checkpoint
+
+pack-samples: mp4
+	@echo "Compress samples" && \
+	zip DCGAN-samples.zip samples/*.gif samples/*.mp4 samples/*.png && \
+	mv DCGAN-samples.zip /home/ubuntu
+
+publish: publish-models publish-samples
+
+publish-models: pack-models
+	@echo "Publish models" && \
+	mv DCGAN-models.zip /home/ubuntu
+
+publish-samples: pack-samples
 	@echo "Publish samples" && \
-	zip DCGAN-smples.zip samples/*.gif samples/*.mp4 samples/*.png && \
-	mv DCGAN-smples.zip /home/ubuntu
+	zip DCGAN-samples.zip samples/*.gif samples/*.mp4 samples/*.png && \
+	mv DCGAN-samples.zip /home/ubuntu
