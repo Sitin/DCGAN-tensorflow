@@ -1,5 +1,10 @@
 .PHONY: all
 
+
+SSH_KEY ?= ~/.ssh/MykhailoZiatin.pem
+REMOTE_HOST ?= ec2-52-90-216-83.compute-1.amazonaws.com
+
+
 train-flowers17-simplified:
 	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png" --is_train --samples_rate=100 --checkpoint_rate=100 --epoch 1000
 
@@ -63,3 +68,13 @@ publish-samples: pack-samples
 	@echo "Publish samples" && \
 	rm -f /home/ubuntu/DCGAN-samples.zip && \
 	mv DCGAN-samples.zip /home/ubuntu
+
+scp: scp-models scp-samples
+
+scp-samples:
+	@echo "Copy remote samples" && \
+	scp -i $(SSH_KEY) ubuntu@$(REMOTE_HOST):DCGAN-samples.zip .
+
+scp-models:
+	@echo "Copy remote samples" && \
+	scp -i $(SSH_KEY) ubuntu@$(REMOTE_HOST):DCGAN-models.zip .
