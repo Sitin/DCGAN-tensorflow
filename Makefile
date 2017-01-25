@@ -10,13 +10,13 @@ gif: gif-train gif-arrange
 
 gif-train: clean-train
 	@echo "Create training gif animation" && \
-	if [ -n "$(shell find samples -type f -maxdepth 1 \( -name "train_*.png" \))" ]; then \
+	if [ -n "$(shell find samples -maxdepth 1 -type f \( -name "train_*.png" \))" ]; then \
 	convert -delay 10 samples/train_*.png samples/animated_training.gif; \
 	fi
 
 gif-arrange: clean-arrange
 	@echo "Create arrange gif animation" && \
-	if [ ! -z "$(shell find samples -type f -maxdepth 1 \( -name "test_arrange_*.png" \))" ]; then \
+	if [ ! -z "$(shell find samples -maxdepth 1 -type f \( -name "test_arrange_*.png" \))" ]; then \
 	convert -delay 10 samples/test_arrange_*.png samples/animated_arrange.gif; \
 	fi
 
@@ -57,9 +57,10 @@ publish: publish-models publish-samples
 
 publish-models: pack-models
 	@echo "Publish models" && \
+	rm /home/ubuntu/DCGAN-models.zip && \
 	mv DCGAN-models.zip /home/ubuntu
 
 publish-samples: pack-samples
 	@echo "Publish samples" && \
-	zip DCGAN-samples.zip samples/*.gif samples/*.mp4 samples/*.png && \
+	rm /home/ubuntu/DCGAN-samples.zip && \
 	mv DCGAN-samples.zip /home/ubuntu
