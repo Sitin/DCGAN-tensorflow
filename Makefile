@@ -50,8 +50,7 @@ pack-models:
 
 pack-samples: mp4
 	@echo "Compress samples" && \
-	zip DCGAN-samples.zip samples/*.gif samples/*.mp4 samples/*.png && \
-	mv DCGAN-samples.zip /home/ubuntu
+	zip DCGAN-samples.zip samples/*.gif samples/*.mp4 samples/*.png
 
 publish: publish-models publish-samples
 
