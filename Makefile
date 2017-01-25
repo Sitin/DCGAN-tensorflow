@@ -10,13 +10,13 @@ gif: gif-train gif-arrange
 
 gif-train: clean-train
 	@echo "Create training gif animation" && \
-	if [ ! -z "$(shell ls samples/train_*.png 1> /dev/null 2>&1;)" ]; then \
+	if [ -n "$(shell find samples -type f -maxdepth 1 \( -name "train_*.png" \))" ]; then \
 	convert -delay 10 samples/train_*.png samples/animated_training.gif; \
 	fi
 
 gif-arrange: clean-arrange
 	@echo "Create arrange gif animation" && \
-	if [ ! -z "$(shell ls samples/test_arrange_*.png 1> /dev/null 2>&1;)" ]; then \
+	if [ ! -z "$(shell find samples -type f -maxdepth 1 \( -name "test_arrange_*.png" \))" ]; then \
 	convert -delay 10 samples/test_arrange_*.png samples/animated_arrange.gif; \
 	fi
 
