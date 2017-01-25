@@ -57,10 +57,10 @@ publish: publish-models publish-samples
 
 publish-models: pack-models
 	@echo "Publish models" && \
-	rm /home/ubuntu/DCGAN-models.zip && \
+	rm -f /home/ubuntu/DCGAN-models.zip && \
 	mv DCGAN-models.zip /home/ubuntu
 
 publish-samples: pack-samples
 	@echo "Publish samples" && \
-	rm /home/ubuntu/DCGAN-samples.zip && \
+	rm -f /home/ubuntu/DCGAN-samples.zip && \
 	mv DCGAN-samples.zip /home/ubuntu
