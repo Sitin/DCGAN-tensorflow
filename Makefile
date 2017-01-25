@@ -11,7 +11,7 @@ train-flowers17-simplified:
 test-flowers17-simplified:
 	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png"
 
-gif: gif-train gif-arrange
+gif: gif-train gif-arange
 
 gif-train: clean-train
 	@echo "Create training gif animation" && \
@@ -19,13 +19,13 @@ gif-train: clean-train
 	convert -delay 10 samples/train_*.png samples/animated_training.gif; \
 	fi
 
-gif-arrange: clean-arrange
-	@echo "Create arrange gif animation" && \
-	if [ ! -z "$(shell find samples -maxdepth 1 -type f \( -name "test_arrange_*.png" \))" ]; then \
-	convert -delay 10 samples/test_arrange_*.png samples/animated_arrange.gif; \
+gif-arange: clean-arange
+	@echo "Create arange gif animation" && \
+	if [ -n "$(shell find samples -maxdepth 1 -type f \( -name "test_arange_*.png" \))" ]; then \
+	convert -delay 10 samples/test_arange_*.png samples/animated_arange.gif; \
 	fi
 
-mp4: mp4-train mp4-arrange
+mp4: mp4-train mp4-arange
 
 mp4-train: gif-train
 	@echo "Create training mp4 movie" && \
@@ -33,21 +33,21 @@ mp4-train: gif-train
 	ffmpeg -f gif -i samples/animated_training.gif -c:v libx264 -vf fps=30 -pix_fmt yuv420p samples/animated_training.mp4; \
 	fi
 
-mp4-arrange: gif-arrange
-	@echo "Create arrange mp4 movie" && \
-	if [ -f samples/animated_arrange.gif ]; then \
-	ffmpeg -f gif -i samples/animated_arrange.gif -c:v libx264 -vf fps=30 -pix_fmt yuv420p samples/animated_arrange.mp4; \
+mp4-arange: gif-arange
+	@echo "Create arange mp4 movie" && \
+	if [ -f samples/animated_arange.gif ]; then \
+	ffmpeg -f gif -i samples/animated_arange.gif -c:v libx264 -vf fps=30 -pix_fmt yuv420p samples/animated_arange.mp4; \
 	fi
 
-clean: clean-train clean-arrange
+clean: clean-train clean-arange
 
 clean-train:
 	@echo "Clean training animation" && \
 	rm -f samples/animated_training.*
 
-clean-arrange:
-	@echo "Clean arrange animation" && \
-	rm -f animated_arrange.*
+clean-arange:
+	@echo "Clean arange animation" && \
+	rm -f animated_arange.*
 
 pack-models:
 	@echo "Compress models" && \
