@@ -215,6 +215,26 @@ def download_17flowers_simplified(dirpath):
     print('Cleaning up ', file_name)
     subprocess.call(cmd)
 
+def download_17flowers_simplified_model(dirpath):
+  url_base = 'https://dl.dropboxusercontent.com/s/bgdonwya6wlz5g0/'
+  file_names = ['17flowers_simplified-models.zip']
+  for file_name in file_names:
+    url = (url_base+file_name).format(**locals())
+    print(url)
+    out_path = os.path.join(dirpath,file_name)
+
+    cmd = ['curl', url, '-o', out_path]
+    print('Downloading ', file_name)
+    subprocess.call(cmd)
+
+    cmd = ['unzip', out_path, '-d', dirpath]
+    print('Decompressing ', file_name)
+    subprocess.call(cmd)
+
+    cmd = ['rm', out_path]
+    print('Cleaning up ', file_name)
+    subprocess.call(cmd)
+
 def prepare_data_dir(path = './data'):
   if not os.path.exists(path):
     os.mkdir(path)
@@ -233,3 +253,4 @@ if __name__ == '__main__':
     download_17flowers('./data')
   if '17flowers_simplified' in args.datasets:
     download_17flowers_simplified('./data')
+    download_17flowers_simplified_model('./checkpoint')
