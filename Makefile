@@ -2,7 +2,7 @@
 
 
 SSH_KEY ?= ~/.ssh/MykhailoZiatin.pem
-REMOTE_HOST ?= ec2-52-90-216-83.compute-1.amazonaws.com
+REMOTE_HOST ?= ec2-54-227-57-118.compute-1.amazonaws.com
 
 
 train-flowers17-simplified:
@@ -12,10 +12,10 @@ test-flowers17-simplified:
 	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --input_fname_pattern "*.png"
 
 train-anatoliy_belov-clips:
-	python main.py --dataset anatoliy_belov-clips --input_height=128 --is_crop True --input_fname_pattern "*.jpg" --is_train --samples_rate=50 --c_dim=1 --checkpoint_rate=100 --epoch 2500
+	python main.py --dataset anatoliy_belov-clips --input_height=300 --output_height=128 --is_crop True --input_fname_pattern "*.jpg" --is_train --samples_rate=50 --c_dim=1 --checkpoint_rate=100 --epoch 2500
 
 test-anatoliy_belov-clips:
-	python main.py --dataset 17flowers_simplified --input_height=128 --is_crop True --c_dim=1 --input_fname_pattern "*.jpg"
+	python main.py --dataset anatoliy_belov-clips --input_height=300 --output_height=128 --is_crop True --c_dim=1 --input_fname_pattern "*.jpg"
 
 gif: gif-train gif-arange
 
