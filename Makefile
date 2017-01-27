@@ -84,3 +84,13 @@ scp-samples:
 scp-models:
 	@echo "Copy remote samples" && \
 	scp -i $(SSH_KEY) ubuntu@$(REMOTE_HOST):DCGAN-models.zip .
+
+unpack: unpack-models unpack-samples
+
+unpack-models:
+	@echo "Unpack models" && \
+	unzip DCGAN-models.zip
+
+unpack-samples:
+	@echo "Unpack samples" && \
+	unzip DCGAN-samples.zip
