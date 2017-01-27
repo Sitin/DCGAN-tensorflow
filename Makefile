@@ -19,7 +19,7 @@ test-anatoliy_belov-clips:
 
 gif: gif-train gif-arange
 
-gif-train: clean-train
+gif-train: clean-train fix-samples
 	@echo "Create training gif animation" && \
 	if [ -n "$(shell find samples -maxdepth 1 -type f \( -name "train_*.png" \))" ]; then \
 	convert -delay 10 samples/train_*.png samples/animated_training.gif; \
@@ -37,12 +37,14 @@ mp4-train: gif-train
 	@echo "Create training mp4 movie" && \
 	if [ -f samples/animated_training.gif ]; then \
 	ffmpeg -f gif -i samples/animated_training.gif -c:v libx264 -vf fps=30 -pix_fmt yuv420p samples/animated_training.mp4; \
+	ffmpeg -i samples/animated_training.mp4 -filter:v "crop=1024:600:0:212" samples/animated_training-1024x600.mp4;  \
 	fi
 
 mp4-arange: gif-arange
 	@echo "Create arange mp4 movie" && \
 	if [ -f samples/animated_arange.gif ]; then \
 	ffmpeg -f gif -i samples/animated_arange.gif -c:v libx264 -vf fps=30 -pix_fmt yuv420p samples/animated_arange.mp4; \
+	ffmpeg -i samples/animated_arange.mp4 -filter:v "crop=1024:600:0:212" samples/animated_arange-1024x600.mp4;  \
 	fi
 
 clean: clean-train clean-arange
@@ -82,7 +84,7 @@ scp-samples:
 	scp -i $(SSH_KEY) ubuntu@$(REMOTE_HOST):DCGAN-samples.zip .
 
 scp-models:
-	@echo "Copy remote samples" && \
+	@echo "Copy remote models" && \
 	scp -i $(SSH_KEY) ubuntu@$(REMOTE_HOST):DCGAN-models.zip .
 
 unpack: unpack-models unpack-samples
@@ -94,3 +96,7 @@ unpack-models:
 unpack-samples:
 	@echo "Unpack samples" && \
 	unzip DCGAN-samples.zip
+
+fix-samples:
+	@echo "Fix samples names" && \
+	./tools.py --fix_samples_filenames
